@@ -1,67 +1,60 @@
-// Write your code here
-
 import {Component} from 'react'
 
 import './index.css'
 
+const HEADS_IMG_URL = 'https://assets.ccbp.in/frontend/react-js/heads-img.png'
+
+const TAILS_IMG_URL = 'https://assets.ccbp.in/frontend/react-js/tails-img.png'
+
 class CoinToss extends Component {
-  state = {total: 0, Heads: 0, Tails: 0, isHead: true}
+  state = {
+    tossResultImage: HEADS_IMG_URL,
+    headsCount: 0,
+    tailsCount: 0,
+  }
 
-  tossCoin = () => {
-    const tossResult = Math.floor(Math.random() * 2)
+  onTossCoin = () => {
+    const {headsCount, tailsCount} = this.state
+    const toss = Math.floor(Math.random() * 2)
+    let tossImage = ''
+    let latestHeadsCount = headsCount
+    let latestTailsCount = tailsCount
 
-    if (tossResult === 0) {
-      this.setState(prevState => ({
-        total: prevState.total + 1,
-        Heads: prevState.Heads + 1,
-        isHead: true,
-      }))
+    if (toss === 0) {
+      tossImage = HEADS_IMG_URL
+      latestHeadsCount += 1
     } else {
-      this.setState(prevState => ({
-        total: prevState.total + 1,
-        Tails: prevState.Tails + 1,
-        isHead: false,
-      }))
+      tossImage = TAILS_IMG_URL
+      latestTailsCount += 1
     }
+    this.setState({
+      tossResultImage: tossImage,
+      headsCount: latestHeadsCount,
+      tailsCount: latestTailsCount,
+    })
   }
 
   render() {
-    const {total, Heads, Tails, isHead} = this.state
-
-    const imgUrl = isHead
-      ? {
-          url: 'https://assets.ccbp.in/frontend/react-js/heads-img.png',
-        }
-      : {
-          url: 'https://assets.ccbp.in/frontend/react-js/tails-img.png',
-        }
+    const {tossResultImage, headsCount, tailsCount} = this.state
+    const totalCount = headsCount + tailsCount
 
     return (
-      <div className="main-container">
-        <div className="coin-container">
+      <div className="app-container">
+        <div className="coin-toss-container">
           <h1 className="heading">Coin Toss Game</h1>
-          <p>Heads (or) Tails</p>
-          <div>
-            <img className="coin-image" src={imgUrl.url} alt="toss result" />
-          </div>
-          <button
-            type="button"
-            onClick={this.tossCoin}
-            className="button
-          "
-          >
-            Toss coin
+          <p className="description">Heads (or) Tails</p>
+          <img
+            src={tossResultImage}
+            alt="toss result"
+            className="toss-result-img"
+          />
+          <button type="button" className="button" onClick={this.onTossCoin}>
+            Toss Coin
           </button>
-          <div className="count-container">
-            <div>
-              <p>{`Total: ${total}`}</p>
-            </div>
-            <div>
-              <p>{`Heads: ${Heads}`}</p>
-            </div>
-            <div>
-              <p>{`Tails: ${Tails}`}</p>
-            </div>
+          <div className="counts-container">
+            <p className="count">Total: {totalCount}</p>
+            <p className="count">Heads: {headsCount}</p>
+            <p className="count">Tails: {tailsCount}</p>
           </div>
         </div>
       </div>
